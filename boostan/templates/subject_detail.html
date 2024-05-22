@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{%block title%}
+subject{{id}}
+{%endblock%}
+{%block content%}
+<body class="text-center">
+    <h1 class="h3 mb-3 font-weight-normal"> {{subject.name}} </h1>
+    <br>
+    <br>
+    <br>
+    <a href="{{url_for('subject_update', id=id)}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{id}}">Edit</a>
+    <a href="#" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+    <br>
+    <br>
+    <br>
+    <a class="btn btn-sm btn-secondary" href="{{ url_for('subject_list') }}">back to subjects list</a>
+
+    <div id="modaledit{{id}}" class="modal fade" role="dialog">
+
+
+        <div class="modal-dialog">
+     
+     
+           <div class="modal-content">
+     
+     
+              <div class="modal-header">
+     
+     
+                <h4 class="modal-title">Update Information</h4>
+
+                 <button type="button" class="close" data-dismiss="modal">&times;</button>
+     
+     
+     
+     
+              </div>
+     
+     
+              <div class="modal-body">
+     
+     
+                 <form action="{{ url_for('subject_update') }}" method="POST">
+     
+     
+                    <div class="form-group">
+     
+     
+                       <label>Name:</label>
+                        <input type="hidden"  name="id" value="{{id}}">
+     
+                       <input type="text" class="form-control" name="name" value="{{subject.name}}">
+     
+     
+                    </div>
+     
+                    <div class="form-group">
+     
+     
+                       <button class="btn btn-primary" type="submit">Update</button>
+     
+     
+                    </div>
+     
+     
+                 </form>
+     
+     
+              </div>
+     
+     
+              <div class="modal-footer">
+     
+     
+                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+     
+     
+              </div>
+     
+     
+           </div>
+     
+     
+        </div>
+    
+</body>
+
+<style>
+    .modal-content {
+      background-color: #212121
+    }
+  </style>
+{%endblock%}
