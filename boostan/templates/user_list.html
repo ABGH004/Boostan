@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}
+    {{session['username']}}'s page
+{% endblock %}
+{%block content%}
+<div style="margin-top:20px; margin-left:20px">
+    
+    <h2>Users List</h2>
+    
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Your rows inside the table HERE: -->
+            {% for user in users %}
+            <tr>
+            <td>{{ user.ID }}</td>
+            <td>{{ user.first_name }} {{user.last_name}}</td>
+            <td><a href="{{url_for('user_detail', id=user.ID)}}">{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+                <td>
+                <a href="{{url_for('user_update', id=user.ID)}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{user.ID}}">Edit</a>
+                <a href="{{url_for('user_delete', id=user.ID)}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+                
+            </td>
+            </tr>
+            <div id="modaledit{{user.ID}}" class="modal fade" role="dialog">
+
+
+                <div class="modal-dialog">
+             
+             
+                   <div class="modal-content">
+             
+             
+                      <div class="modal-header">
+             
+             
+                        <h4 class="modal-title">Update Information</h4>
+
+                         <button type="button" class="close" data-dismiss="modal">&times;</button>
+             
+             
+             
+             
+                      </div>
+             
+             
+                      <div class="modal-body">
+             
+             
+                         <form action="{{url_for('user_update')}}" method="POST">
+             
+             
+                            <div class="form-group">
+             
+             
+                               <label>First Name:</label>
+                                <input type="hidden"  name="id" value="{{user.ID}}">
+             
+                               <input type="text" class="form-control" name="first_name" value="{{user.first_name}}" required="1">
+             
+             
+                            </div>
+                           
+                           <div class="form-group">
+            
+            
+                              <label>Last Name:</label>
+
+                              <input type="text" class="form-control" name="last_name" value="{{user.last_name}}" required="1">
+            
+            
+                           </div>
+               
+                           <div class="form-group">
+                  
+                  
+                              <label>username:</label>
+
+                              <input type="text" class="form-control" name="username" value="{{user.username}}" required="1">
+            
+            
+                           </div>
+                           <div class="form-group">
+                  
+                  
+                              <label>email:</label>
+
+                              <input type="text" class="form-control" name="email" value="{{user.email}}" required="1">
+            
+            
+                           </div>
+                           {%if session["ID"] == user.ID%}
+                              <div class="form-group">
+                     
+                     
+                                 <label>new password:</label>
+
+                                 <input type="text" class="form-control" name="password">
+               
+               
+                              </div>
+                           {%endif%}
+                     
+                           <div class="form-group">
+             
+             
+                               <button class="btn btn-primary" type="submit">Update</button>
+             
+             
+                            </div>
+             
+             
+                         </form>
+             
+             
+                      </div>
+             
+             
+                      <div class="modal-footer">
+             
+             
+                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+             
+             
+                      </div>
+             
+             
+                   </div>
+             
+             
+                </div>
+             
+             
+             </div>
+            {% endfor %}
+        </tbody>
+    </table>
+ 
+</div>
+<style>
+    .modal-content {
+      background-color: #212121
+    }
+  </style>
+{% endblock %}

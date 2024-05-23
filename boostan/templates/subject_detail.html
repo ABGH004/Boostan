@@ -9,7 +9,7 @@ subject{{id}}
     <br>
     <br>
     <a href="{{url_for('subject_update', id=id)}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{id}}">Edit</a>
-    <a href="#" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+    <a href="{{url_for('subject_delete', id=id)}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
     <br>
     <br>
     <br>
@@ -49,7 +49,7 @@ subject{{id}}
                        <label>Name:</label>
                         <input type="hidden"  name="id" value="{{id}}">
      
-                       <input type="text" class="form-control" name="name" value="{{subject.name}}">
+                       <input type="text" class="form-control" name="name" value="{{subject.name}}" required="1">
      
      
                     </div>
