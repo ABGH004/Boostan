@@ -15,21 +15,31 @@
             <tr>
             <th scope="col">ID</th>
             <th scope="col">Name</th>
+            {%if session["role"] == "Student"%}
+            <th scope="col">Grade</th>
+            <th scope="col">Teacher Name</th>
+            {%endif%}
             </tr>
         </thead>
         <tbody>
             <!-- Your rows inside the table HERE: -->
             {% for subject in subjects %}
             <tr>
-            <td>{{ subject.ID }}</td>
-            <td><a href={{url_for('subject_detail', id=subject.ID)}}>{{ subject.name }}</td>
-            <td>
-                <a href="{{url_for('subject_update', id=subject.ID)}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{subject.ID}}">Edit</a>
-                <a href="{{url_for('subject_delete', id=subject.ID)}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+            <td>{{ subject.subject_id }}</td>
+            <td><a href={{url_for('subject_detail', id=subject.subject_id)}}>{{ subject.name }}</td>
+            {%if session["role"] == "Student"%}
+            <td>{{subject.grade}}</td>
+            <td>{{subject.first_name}} {{subject.last_name}}</td>
+            {%endif%}
+            <td> 
+               {%if session["role"] == "Admin"%}
+                <a href="{{url_for('subject_update', id=subject.subject_id)}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{subject.subject_id}}">Edit</a>
+               {%endif%}
+                <a href="{{url_for('subject_delete', id=subject.subject_id)}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
                 
             </td>
             </tr>
-            <div id="modaledit{{subject.ID}}" class="modal fade" role="dialog">
+            <div id="modaledit{{subject.subject_id}}" class="modal fade" role="dialog">
 
 
                 <div class="modal-dialog">
@@ -61,7 +71,7 @@
              
              
                                <label>Name:</label>
-                                <input type="hidden"  name="id" value="{{subject.ID}}">
+                                <input type="hidden"  name="id" value="{{subject.subject_id}}">
              
                                <input type="text" class="form-control" name="name" value="{{subject.name}}" required="1">
              
@@ -133,9 +143,23 @@
      
      
                        <label>Name:</label>
+                       {%if session["role"] == "Admin"%}
                        <input type="text" class="form-control" name="name" required="1">
-     
-     
+                       {%elif session["role"] == "Teacher"%}
+                       <select name="name" action="{{ url_for('subject_insert') }}" method="POST">
+                        <option value="{{allsubjects[0]['name']}}" selected>{{allsubjects[0]['name']}}</option>
+                        {% for subject in allsubjects[1:] %}
+                          <option value="{{subject.name}}">{{subject.name}}</option>
+                        {% endfor %}
+                      </select>
+                        {%elif session["role"] == "Student"%}
+                        <select name="name" action="{{ url_for('subject_insert') }}" method="POST">
+                           <option value="{{allsubjects[0]['name']}} - {{allsubjects[0]['first_name']}} {{allsubjects[0]['last_name']}}" selected>{{allsubjects[0]['name']}} - {{allsubjects[0]['first_name']}} {{allsubjects[0]['last_name']}}</option>
+                           {% for subject in allsubjects[1:] %}
+                             <option value="{{subject.name}} - {{subject.first_name}} {{subject.last_name}}">{{subject.name}} - {{subject.first_name}} {{subject.last_name}}</option>
+                           {% endfor %}
+                         </select>
+                        {%endif%}
                     </div>
      
                     <div class="form-group">

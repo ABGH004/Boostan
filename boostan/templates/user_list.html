@@ -10,28 +10,55 @@ users
     <table class="table table-hover table-dark">
         <thead>
             <tr>
+            {%if session["role"] == "Admin"%}
             <th scope="col">ID</th>
-            <th scope="col">Name</th>
             <th scope="col">Username</th>
+            <th scope="col">Name</th>
+            <th scope="col">Age</th>
             <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            {%elif session["role"] == "Teacher"%}
+            <th scope="col">Subject Name</th>
+            <th scope="col">Student Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Grade</th>
+            {%endif%}
             </tr>
         </thead>
         <tbody>
             <!-- Your rows inside the table HERE: -->
             {% for user in users %}
             <tr>
-            <td>{{ user.ID }}</td>
+            {%if session["role"] == "Admin"%}
+         
+            <td>{{ user.user_id }}</td>
+            <td><a href="{{url_for('user_detail', id=user.user_id)}}">{{ user.username }}</td>
             <td>{{ user.first_name }} {{user.last_name}}</td>
-            <td><a href="{{url_for('user_detail', id=user.ID)}}">{{ user.username }}</td>
+            <td>{{ user.age }}</td>
             <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
                 <td>
-                <a href="{{url_for('user_update', id=user.ID)}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{user.ID}}">Edit</a>
-                <a href="{{url_for('user_delete', id=user.ID)}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+                <a href="{{url_for('user_update', id=user.user_id)}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{user.user_id}}">Edit</a>
+                <a href="{{url_for('user_delete', id=user.user_id, role=user.role)}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
                 
             </td>
-            </tr>
-            <div id="modaledit{{user.ID}}" class="modal fade" role="dialog">
-
+            {%elif session["role"] == "Teacher"%}
+            <td>{{ user.name }}</td>
+            <td><a href="{{url_for('user_detail', id=user.user_id)}}">{{ user.first_name }} {{user.last_name}}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.grade }}</td>
+            
+            <td>
+                <a href="{{url_for('user_update', id=user.user_id, name=user.name)}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{user.user_id}}{{user.name}}">Edit</a>
+                
+            </td>
+            {%endif%}   
+         </tr>
+            {%if session["role"] == "Admin"%}
+            <div id="modaledit{{user.user_id}}" class="modal fade" role="dialog">
+            {%elif session["role"] == "Teacher"%}
+            <div id="modaledit{{user.user_id}}{{user.name}}" class="modal fade" role="dialog">
+            {%endif%}
 
                 <div class="modal-dialog">
              
@@ -57,12 +84,12 @@ users
              
                          <form action="{{url_for('user_update')}}" method="POST">
              
-             
+                           {%if session["role"] == "Admin"%}
                             <div class="form-group">
              
              
                                <label>First Name:</label>
-                                <input type="hidden"  name="id" value="{{user.ID}}">
+                                <input type="hidden"  name="id" value="{{user.user_id}}">
              
                                <input type="text" class="form-control" name="first_name" value="{{user.first_name}}" required="1">
              
@@ -91,13 +118,22 @@ users
                            <div class="form-group">
                   
                   
+                              <label>Age:</label>
+
+                              <input type="number" class="form-control" name="age" value="{{user.age}}" min="18" max="60" required="1">
+            
+            
+                           </div>
+                           <div class="form-group">
+                  
+                  
                               <label>email:</label>
 
                               <input type="text" class="form-control" name="email" value="{{user.email}}" required="1">
             
             
                            </div>
-                           {%if session["ID"] == user.ID%}
+                           {%if session["user_id"] == user.user_id%}
                               <div class="form-group">
                      
                      
@@ -108,7 +144,18 @@ users
                
                               </div>
                            {%endif%}
+                           {%elif session["role"] == "Teacher"%}
+                           <div class="form-group">
                      
+                     
+                              <label>grade:</label>
+                                <input type="hidden"  name="id" value="{{user.user_id}}">
+                                <input type="hidden"  name="name" value="{{user.name}}">
+                              <input type="number" class="form-control" name="grade" value="{{user.grade}}" min="0" max="20">
+            
+            
+                           </div>
+                           {%endif%}
                            <div class="form-group">
              
              
@@ -117,7 +164,7 @@ users
              
                             </div>
              
-             
+                            
                          </form>
              
              

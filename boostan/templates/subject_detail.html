@@ -3,12 +3,53 @@
 subject{{id}}
 {%endblock%}
 {%block content%}
-<body class="text-center">
+<div style="margin-top:20px; margin-left:20px">
     <h1 class="h3 mb-3 font-weight-normal"> {{subject.name}} </h1>
     <br>
-    <br>
-    <br>
+      {%if session["role"] == "Student"%}
+      <table class="table table-hover table-dark">
+         <thead>
+             <tr>
+             <th scope="col">Teacher Name</th>
+             <th scope="col">Email</th>
+             <th scope="col">Grade</th>
+             </tr>
+         </thead>
+         <tbody>
+             <!-- Your rows inside the table HERE: -->
+             <tr>
+             <td>{{ teacher.first_name }} {{teacher.last_name}}</td>
+             <td>{{ teacher.email }}</td>
+             <td>{{grade.grade}}
+             
+            </tr>
+             
+         </tbody>
+     </table>  
+      {%else%}
+    <h3 class="h3 mb-3 font-weight-normal"> Teacher:  {{teacher.first_name}} {{teacher.last_name}}</h3>
+    <h3 class="h3 mb-3 font-weight-normal">Email: {{teacher.email}}</h3>
+    <table class="table table-hover table-dark">
+      <thead>
+          <tr>
+          <th scope="col">Student Name</th>
+          <th scope="col">Email</th>
+          </tr>
+      </thead>
+      <tbody>
+          <!-- Your rows inside the table HERE: -->
+          {% for student in students %}
+          <tr>
+          <td>{{ student.first_name }} {{student.last_name}}</td>
+          <td>{{ student.email }}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+   {%endif%}
+   {%if session["role"] == "Admin"%}
     <a href="{{url_for('subject_update', id=id)}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{id}}">Edit</a>
+   {%endif%}
     <a href="{{url_for('subject_delete', id=id)}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
     <br>
     <br>
@@ -83,7 +124,7 @@ subject{{id}}
      
         </div>
     
-</body>
+</div>
 
 <style>
     .modal-content {

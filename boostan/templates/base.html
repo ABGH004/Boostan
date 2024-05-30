@@ -21,12 +21,30 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           {% if session['loggedin'] %}
           <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
-                  <a class="nav-link" href={{url_for('admin_user_home')}}>Home <span class="sr-only">(current)</span></a>
+            {% if session['role'] == 'Admin'%}  
+            <li class="nav-item active">
+                  <a class="nav-link" href={{url_for('admin_home')}}>Home <span class="sr-only">(current)</span></a>
               </li>
+              
+          
               <li class="nav-item active">
                 <a class="nav-link" href={{url_for('user_list')}}>Users</a>
             </li>
+              {%endif%}
+              {% if session['role'] == 'Teacher'%}
+              <li class="nav-item active">
+                <a class="nav-link" href={{url_for('teacher_home')}}>Home <span class="sr-only">(current)</span></a>
+            </li>
+           
+              <li class="nav-item active">
+                <a class="nav-link" href={{url_for('user_list')}}>Students</a>
+            </li>
+              {%endif%}
+              {% if session['role'] == 'Student'%}
+              <li class="nav-item active">
+                <a class="nav-link" href={{url_for('student_home')}}>Home <span class="sr-only">(current)</span></a>
+            </li>
+              {%endif%}
             <li class="nav-item active">
                 <a class="nav-link" href={{url_for('subject_list')}}>Subjects</a>
             </li>
@@ -37,7 +55,7 @@
                 <a class="nav-link"> Welcome, {{ session['username'] }} </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href={{url_for('user_detail', id=session["ID"])}}>Your Profile</a>
+              <a class="nav-link" href={{url_for('user_detail', id=session["user_id"])}}>Your Profile</a>
           </li>
             <li class="nav-item">
                 <a class="nav-link" href={{ url_for('logout_page')}}>Log Out</a>

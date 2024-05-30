@@ -1,6 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, SelectField, IntegerField
+from wtforms.validators import (
+    Length,
+    EqualTo,
+    Email,
+    DataRequired,
+    ValidationError,
+    NumberRange,
+)
 from boostan import db
 
 
@@ -33,11 +40,22 @@ class RegisterForm(FlaskForm):
     last_name = StringField(
         label="Last Name:", validators=[Length(min=2, max=35), DataRequired()]
     )
+    age = IntegerField(
+        label="Age:",
+        validators=[
+            DataRequired(),
+            NumberRange(min=18, max=60, message="Invalid Length"),
+        ],
+    )
     username = StringField(
         label="User Name:", validators=[Length(min=2, max=25), DataRequired()]
     )
     email_address = StringField(
         label="Email Address:", validators=[Email(), DataRequired()]
+    )
+    role = SelectField(
+        label="Role:",
+        choices=[("Admin", "Admin"), ("Teacher", "Teacher"), ("Student", "Student")],
     )
     password1 = PasswordField(
         label="Password:", validators=[Length(min=6), DataRequired()]

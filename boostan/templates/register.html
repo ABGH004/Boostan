@@ -18,12 +18,18 @@ Register Page
 
             {{ form.last_name.label() }}
             {{ form.last_name(class="form-control", placeholder="Last Name") }}
+            
+            {{ form.age.label() }}
+            {{ form.age(class="form-control", placeholder="Age") }}
 
             {{ form.username.label() }}
             {{ form.username(class="form-control", placeholder="User Name") }}
 
             {{ form.email_address.label() }}
             {{ form.email_address(class="form-control", placeholder="Email Address") }}
+
+            {{ form.role.label() }}
+            {{ form.role(class="form-control") }}
 
             {{ form.password1.label() }}
             {{ form.password1(class="form-control", placeholder="Password") }}

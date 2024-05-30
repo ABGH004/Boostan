@@ -3,20 +3,225 @@
 user{{id}}
 {%endblock%}
 {%block content%}
-<body class="text-center">
-    <h1 class="h3 mb-3 font-weight-normal">Username: {{user.username}} </h1>
-    <h1 class="h3 mb-3 font-weight-normal">Name: {{user.first_name}} {{user.last_name}}</h1>
-    <h1 class="h3 mb-3 font-weight-normal">Email Address: {{user.email}} </h1>
-    <br>
-    <br>
-    <br>
-    <a href="{{url_for('user_update', id=id)}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{id}}">Edit</a>
-    <a href="{{url_for('user_delete', id=id)}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
-    <br>
-    <br>
-    <br>
-    <a class="btn btn-sm btn-secondary" href="{{ url_for('user_list') }}">back to users list</a>
+   <div style="margin-top:20px; margin-left:20px">
+    
+      <h2>{{user.username}}</h2> 
+      {%if session["role"] == "Admin" or session["user_id"] == id%}  
+   
+         <table class="table table-hover table-dark">
+            <thead>
+               <tr>
+               <th scope="col">ID</th>
+               <th scope="col">Username</th>
+               <th scope="col">Name</th>
+               <th scope="col">Age</th>
+               <th scope="col">Email</th>
+               <th scope="col">Role</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+               <td>{{ user.user_id }}</td>
+               <td>{{ user.username }}</td>
+               <td>{{ user.first_name }} {{user.last_name}}</td>
+               <td>{{ user.age }}</td>
+               <td>{{ user.email }}</td>
+               <td>{{ user.role }}</td>
+                     <td>
+                     <a href="{{url_for('user_update', id=user.user_id)}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{user.user_id}}">Edit</a>
+                     <a href="{{url_for('user_delete', id=user.user_id, role=user.role)}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+                     
+               </td>
+               </tr>
+               </tbody>
+            </table>
+         
+         {%if user.role == "Student" %}
+         <h2>Your Subjects:</h2>
+         <table class="table table-hover table-dark">
+            <thead>
+               <tr>
+               <th scope="col">Subject ID</th>
+               <th scope="col">Subject Name</th>
+               <th scope="col">Teacher Name</th>
+               <th scope="col">Email</th>
+               <th scope="col">Grade</th>
+               </tr>
+            </thead>
+            <tbody>
+               {%for rec in recs%}
+               <tr>
+               <td>{{ rec.id }}</td>
+               <td>{{ rec.name }}</td>
+               <td>{{ rec.first_name }} {{rec.last_name}}</td>
+               <td>{{ rec.email }}</td>
+               <td>{{ rec.grade }}</td>
+               </tr>
+               {%endfor%}
+            </tbody>
+         </table>
+         <table class="table table-hover table-dark">
+            <thead>
+               <tr>
+               <th scope="col">AVG</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+               <td>{{ avg }}</td>
+               </tr>
+            </tbody>
+         </table>
+         {%endif%}
+         {%if user.role == "Teacher" %}
+         <h2>Your Subjects:</h2>
+         <table class="table table-hover table-dark">
+            <thead>
+               <tr>
+               <th scope="col">ID</th>
+               <th scope="col">Name</th>
+               </tr>
+            </thead>
+            <tbody>
+               {%for subject in subjects%}
+               <tr>
+               <td>{{ subject.id }}</td>
+               <td>{{ subject.name }}</td>
+               </tr>
+               {%endfor%}
+            </tbody>
+         </table>
+         <h2>Your Students:</h2>
+         <table class="table table-hover table-dark">
+            <thead>
+               <tr>
+                  <th scope="col">Subject</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Age</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Grade</th>
+                  
+               </tr>
+            </thead>
+            <tbody>
+               {%for student in students%}
+               <tr>
+               <td>{{ student.name }}</td>
+               <td>{{ student.first_name }} {{student.last_name}}</td>
+               <td>{{ student.age }}</td>
+               <td>{{ student.email }}</td>
+               <td>{{ student.grade }}</td>
+               </tr>
+               {%endfor%}
+            </tbody>
+         </table>
+         {%endif%}
+         {%if session["role"] == "Admin"%}
+         <a class="btn btn-sm btn-secondary" href="{{ url_for('user_list') }}">back to users list</a>
+         {%endif%}  
+   </div>
+   {%elif session["role"] == "Teacher"%}
+      {%if user.role == "Teacher" %}
+      <h2>Your Subjects:</h2>
+      <table class="table table-hover table-dark">
+         <thead>
+            <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            </tr>
+         </thead>
+         <tbody>
+            {%for subject in subjects%}
+            <tr>
+            <td>{{ subject.id }}</td>
+            <td>{{ subject.name }}</td>
+            </tr>
+            {%endfor%}
+         </tbody>
+      </table>
+      <h2>Your Students:</h2>
+      <table class="table table-hover table-dark">
+         <thead>
+            <tr>
+               <th scope="col">Subject</th>
+               <th scope="col">Name</th>
+               <th scope="col">Age</th>
+               <th scope="col">Email</th>
+               <th scope="col">Grade</th>
+               
+            </tr>
+         </thead>
+         <tbody>
+            {%for student in students%}
+            <tr>
+            <td>{{ student.name }}</td>
+            <td>{{ student.first_name }} {{student.last_name}}</td>
+            <td>{{ student.age }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.grade }}</td>
+            </tr>
+            {%endfor%}
+         </tbody>
+      </table>
 
+         {%elif user.role == "Student"%}
+            </table>
+            <table class="table table-hover table-dark">
+            <thead>
+               <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Age</th>
+                  <th scope="col">Email</th>
+                  
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+               <td>{{ student.first_name }} {{student.last_name}}</td>
+               <td>{{ student.age }}</td>
+               <td>{{ student.email }}</td>
+            </tr>
+               </tbody>
+            </table>
+            <a class="btn btn-sm btn-secondary" href="{{ url_for('user_list') }}">back to users list</a>
+            {%endif%}
+   
+   {%elif session["role"] == "Student" %}
+      <table class="table table-hover table-dark">
+         <thead>
+            <tr>
+            <th scope="col">Subject ID</th>
+            <th scope="col">Subject Name</th>
+            <th scope="col">Teacher Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Grade</th>
+            </tr>
+         </thead>
+         <tbody>
+            {%for rec in recs%}
+            <tr>
+            <td>{{ rec.id }}</td>
+            <td>{{ rec.name }}</td>
+            <td>{{ rec.first_name }} {{rec.last_name}}</td>
+            <td>{{ rec.email }}</td>
+            <td>{{ rec.grade }}</td>
+            </tr>
+            {%endfor%}
+         </tbody>
+      </table>
+      <table class="table table-hover table-dark">
+         <thead>
+            <tr>
+            <th scope="col">AVG</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+            <td>{{ avg }}</td>
+            </tr>
+         </tbody>
+      </table>
+   {%endif%}
     <div id="modaledit{{id}}" class="modal fade" role="dialog">
 
 
@@ -84,7 +289,7 @@ user{{id}}
   
   
                  </div>
-                 {%if session["ID"] == user.ID%}
+                 {%if session["user_id"] == user.user_id%}
                     <div class="form-group">
            
            
@@ -128,7 +333,6 @@ user{{id}}
    
    </div>
     
-</body>
 
 <style>
     .modal-content {
